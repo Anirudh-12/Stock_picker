@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stock Screener</title>
+
+    <!-- Add any additional CSS styles or links to external stylesheets here -->
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+
+        header, footer {
+            background-color: #333;
+            color: white;
+            padding: 10px;
+            text-align: center;
+        }
+
+        main {
+            margin-top: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        table, th, td {
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+
+        th, td {
+            padding: 10px;
+        }
+
+        footer {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <h1>Stock Screener</h1>
+        <!-- Add any additional header content here -->
+    </header>
+
+    <!-- ... (existing form content) ... -->
+    <form action="/results" method="post" id="filterForm">
+        <!-- Filter form fields -->
+        <div id="filterFields">
+            <label for="filter_name_0">Filter Name:</label>
+            <select name="filter_name_0" class="filterName">
+                <option value="industry">Industry</option>
+                <option value="pe_ratio">PE Ratio</option>
+                <option value="book_value">Book Value</option>
+                <option value="dividend_yield">dividend_yield</option>
+            </select>
+            <br>
+            <label for="filter_min_0">Min Value:</label>
+            <input type="number" name="filter_min_0" class="filterMin">
+            <label for="filter_max_0">Max Value:</label>
+            <input type="number" name="filter_max_0" class="filterMax">
+            <br>
+        </div>
+
+    <button type="button" onclick="addFilterField()">Add Filter</button>
+    <button type="submit">Search</button>
+</form>
+    <main>
+        <!-- Display all stocks -->
+        {% if stocks %}
+            <h2>All Stocks</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Symbol</th>
+                        <th>Instrument</th>
+                        <th>PE Ratio</th>
+                        <th>Dividend Yield</th>
+                        <th>Book Value</th>
+                        <!-- Add more columns as needed -->
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for stock in stocks %}
+                        <tr>
+                            <td>{{ stock['Symbol'] }}</td>
+                            <td>{{ stock['Instrument_name'] }}</td>
+                            <td>{{ stock['pe_ratio'] }}</td>
+                            <td>{{ stock['dividend_yield'] }}</td>
+                            <td>{{ stock['book_value'] }}</td>
+                            <!-- Add more columns as needed -->
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% endif %}
+    </main>
+
+<footer>
+<!-- Add any additional footer content here -->
+<p>&copy; 2023 Stock Screener</p>
+</footer>
+
+<script>
+    // Function to add a new filter field
+    var filterCounter = 4
+    function addFilterField() {
+        filterCounter+=2
+        const filterFieldsContainer = document.getElementById('filterFields');
+
+
+        // Create new filter elements
+        const filterNameSelect = document.createElement('select');
+        filterNameSelect.name = `filter_name_${filterCounter}`;
+        filterNameSelect.className = 'filterName';
+        const optionIndustry = document.createElement('option');
+        optionIndustry.value = 'industry';
+        optionIndustry.text = 'Industry';
+        const optionPeRatio = document.createElement('option');
+        optionPeRatio.value = 'pe_ratio';
+        optionPeRatio.text = 'PE Ratio';
+        const optionBookValue = document.createElement('option');
+        optionBookValue.value = 'book_value';
+        optionBookValue.text = 'book_value';
+        const optionDividend = document.createElement('option');
+        optionDividend.value = 'dividend_yield';
+        optionDividend.text = 'dividend_yield';
+        filterNameSelect.appendChild(optionIndustry);
+        filterNameSelect.appendChild(optionPeRatio);
+        filterNameSelect.appendChild(optionBookValue);
+        filterNameSelect.appendChild(optionDividend);
+
+        const filterMinInput = document.createElement('input');
+        filterMinInput.type = 'number';
+        filterMinInput.name = `filter_min_${filterCounter}`;
+        filterMinInput.className = 'filterMin';
+
+        const filterMaxInput = document.createElement('input');
+        filterMaxInput.type = 'number';
+        filterMaxInput.name = `filter_max_${filterCounter}`;
+        filterMaxInput.className = 'filterMax';
+
+        // Append new filter elements to the container
+        filterFieldsContainer.appendChild(document.createElement('br'));
+        filterFieldsContainer.appendChild(document.createTextNode('Filter Name: '));
+        filterFieldsContainer.appendChild(filterNameSelect);
+        filterFieldsContainer.appendChild(document.createElement('br'));
+        filterFieldsContainer.appendChild(document.createTextNode('Min Value: '));
+        filterFieldsContainer.appendChild(filterMinInput);
+        filterFieldsContainer.appendChild(document.createTextNode('Max Value: '));
+        filterFieldsContainer.appendChild(filterMaxInput);
+        filterFieldsContainer.appendChild(document.createElement('br'));
+    }
+</script>
+
+</body>
+
+</html>
